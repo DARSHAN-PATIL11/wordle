@@ -8,7 +8,7 @@ function Keyboard() {
   const keys2 = useMemo(() => ["A", "S", "D", "F", "G", "H", "J", "K", "L"], []);
   const keys3 = useMemo(() => ["Z", "X", "C", "V", "B", "N", "M"], []);
 
-  const { board, disabledLetters, gameOver, onSelectLetter, onEnter, onDelete } =
+  const { disabledLetters, gameOver, onSelectLetter, onEnter, onDelete } =
     useContext(AppContext); // ✅ Removed `currAttempt`
 
   const handleKeyboard = useCallback(
