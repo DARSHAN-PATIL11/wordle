@@ -8,14 +8,13 @@ function Keyboard() {
   const keys3 = ["Z", "X", "C", "V", "B", "N", "M"];
 
   const {
-    board,
     disabledLetters,
     currAttempt,
     gameOver,
     onSelectLetter,
     onEnter,
     onDelete,
-  } = useContext(AppContext);
+  } = useContext(AppContext); // Removed "board" (unused)
 
   const handleKeyboard = useCallback(
     (event) => {
@@ -25,52 +24,41 @@ function Keyboard() {
       } else if (event.key === "Backspace") {
         onDelete();
       } else {
-        keys1.forEach((key) => {
-          if (event.key.toLowerCase() === key.toLowerCase()) {
-            onSelectLetter(key);
-          }
-        });
-        keys2.forEach((key) => {
-          if (event.key.toLowerCase() === key.toLowerCase()) {
-            onSelectLetter(key);
-          }
-        });
-        keys3.forEach((key) => {
+        [...keys1, ...keys2, ...keys3].forEach((key) => {
           if (event.key.toLowerCase() === key.toLowerCase()) {
             onSelectLetter(key);
           }
         });
       }
     },
-    [currAttempt]
+    [gameOver, keys1, keys2, keys3, onDelete, onEnter, onSelectLetter] // ✅ Correct dependencies
   );
+
   useEffect(() => {
     document.addEventListener("keydown", handleKeyboard);
-
     return () => {
       document.removeEventListener("keydown", handleKeyboard);
     };
   }, [handleKeyboard]);
 
-  console.log(disabledLetters);
   return (
-    <div className="keyboard" onKeyDown={handleKeyboard}>
+    <div className="keyboard">
       <div className="line1">
-        {keys1.map((key) => {
-          return <Key keyVal={key} disabled={disabledLetters.includes(key)} />;
-        })}
+        {keys1.map((key) => (
+          <Key key={key} keyVal={key} disabled={disabledLetters.includes(key)} />
+        ))}
       </div>
       <div className="line2">
-        {keys2.map((key) => {
-          return <Key keyVal={key} disabled={disabledLetters.includes(key)} />;
-        })}
+        {keys2.map((key) => (
+          <Key key={key} keyVal={key} disabled={disabledLetters.includes(key)} />
+        ))}
       </div>
       <div className="line3">
-        <Key keyVal={"ENTER"} bigKey />
-        {keys3.map((key) => {
-          return <Key keyVal={key} disabled={disabledLetters.includes(key)} />;
-        })}
-        <Key keyVal={"DELETE"} bigKey />
+        <Key key="ENTER" keyVal="ENTER" bigKey />
+        {keys3.map((key) => (
+          <Key key={key} keyVal={key} disabled={disabledLetters.includes(key)} />
+        ))}
+        <Key key="DELETE" keyVal="DELETE" bigKey />
       </div>
     </div>
   );
